@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pink-main: #ff69b4;
+  --pink-hot: #e0218a;
+  --pink-soft: #ffc1e3;
+  --pink-mist: #ffe3f4;
+  --glitter-white: #fff8ff;
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html,
+  body,
+  #root {
+    @apply min-h-screen;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: #4f2142;
+    background:
+      radial-gradient(circle at 15% 18%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 38%),
+      radial-gradient(circle at 82% 8%, rgba(255, 214, 236, 0.7) 0%, rgba(255, 214, 236, 0) 40%),
+      linear-gradient(140deg, #fff3fb 0%, #ffe3f4 34%, #ffc5e4 68%, #ffe9f6 100%);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.pink-haze {
+  background:
+    radial-gradient(circle at 8% 25%, rgba(255, 105, 180, 0.2), transparent 36%),
+    radial-gradient(circle at 88% 20%, rgba(224, 33, 138, 0.22), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.65), transparent 45%);
+}
+
+.sparkle-emoji {
+  position: absolute;
+  font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+  user-select: none;
+}
+
+@layer components {
+  .title-script {
+    @apply font-display text-hotPink;
+    text-shadow: 0 5px 14px rgba(224, 33, 138, 0.25);
+  }
+
+  .section-title {
+    @apply font-display text-hotPink;
+    letter-spacing: 0.015em;
+    text-shadow: 0 3px 10px rgba(224, 33, 138, 0.2);
+  }
+
+  .glass-panel {
+    @apply rounded-[2.4rem] border border-white/60 bg-white/35 shadow-glow backdrop-blur-xl;
+  }
+
+  .doll-box {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-shadow:
+      0 32px 85px rgba(224, 33, 138, 0.24),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  }
+
+  .doll-box::before {
+    content: 'LIMITED EDITION';
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    background: linear-gradient(135deg, rgba(255, 105, 180, 0.96), rgba(224, 33, 138, 0.96));
+    color: var(--glitter-white);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    z-index: 2;
+  }
+
+  .doll-box::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 10%, rgba(255, 255, 255, 0.42) 50%, transparent 92%);
+    transform: translateX(-110%);
+    animation: shimmer 5.8s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .pill-tag {
+    @apply inline-flex items-center rounded-full border border-white/70 bg-white/65 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-hotPink;
+    box-shadow: inset 0 0 0 1px rgba(255, 105, 180, 0.2);
+  }
+
+  .pink-button,
+  .glass-button {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-extrabold transition-all duration-300;
+  }
+
+  .pink-button {
+    @apply border border-transparent bg-gradient-to-r from-barbiePink to-hotPink text-glitter;
+    box-shadow: 0 14px 24px rgba(224, 33, 138, 0.3);
+  }
+
+  .pink-button:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 19px 28px rgba(224, 33, 138, 0.36);
+  }
+
+  .glass-button {
+    @apply border border-white/70 bg-white/60 text-hotPink backdrop-blur-sm;
+  }
+
+  .glass-button:hover {
+    @apply border-hotPink/30 bg-white/80;
+    transform: translateY(-2px);
+  }
+
+  .profile-frame {
+    @apply relative mx-auto aspect-square w-full max-w-[19rem] overflow-hidden rounded-[2.2rem] border-4 border-white/70 bg-gradient-to-br from-bubblegum to-blush shadow-[0_20px_55px_rgba(224,33,138,0.3)];
+  }
+
+  .floating-pill {
+    @apply absolute -bottom-4 left-2 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/85 px-4 py-2 text-xs font-bold text-hotPink shadow-lg backdrop-blur;
+  }
+
+  .sticker-card {
+    @apply rounded-[1.8rem] border border-white/70 bg-white/75 p-5;
+    box-shadow:
+      0 10px 28px rgba(224, 33, 138, 0.13),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  .sticker-card:hover {
+    transform: translateY(-3px) rotate(-0.5deg);
+    box-shadow:
+      0 16px 34px rgba(224, 33, 138, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  }
+
+  .icon-badge {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-gradient-to-br from-barbiePink to-hotPink text-white;
+    box-shadow: 0 8px 15px rgba(224, 33, 138, 0.3);
+  }
+
+  .toy-card {
+    @apply flex h-full flex-col rounded-[1.8rem] border-2 border-white/80 bg-gradient-to-b from-white/90 to-pink-50/75 p-5;
+    box-shadow: 0 14px 33px rgba(224, 33, 138, 0.14);
+  }
+
+  .toy-label {
+    @apply inline-flex items-center rounded-full bg-hotPink px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-white;
+  }
+
+  .pill-chip {
+    @apply inline-flex rounded-full border border-hotPink/20 bg-white/90 px-3 py-1 text-xs font-bold text-hotPink;
+  }
+
+  .flip-phone {
+    @apply rounded-[2rem] border-2 border-white/75 bg-white/70 p-4;
+    box-shadow:
+      0 16px 36px rgba(224, 33, 138, 0.18),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+  }
+
+  .phone-top {
+    @apply mx-auto mb-3 h-1.5 w-20 rounded-full bg-hotPink/35;
+  }
+
+  .phone-screen {
+    @apply rounded-[1.4rem] border border-white/70 bg-gradient-to-b from-white/95 to-pink-100/80 p-4;
+  }
+
+  .phone-link {
+    @apply mt-3 flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-800 transition-colors;
+  }
+
+  .phone-link:hover {
+    @apply border-hotPink/35 text-hotPink;
+  }
+
+  .social-dot {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/75 bg-white text-hotPink;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  .social-dot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 18px rgba(224, 33, 138, 0.25);
+  }
+
+  .phone-keypad {
+    @apply mt-4 grid grid-cols-3 gap-2;
+  }
+
+  .key {
+    @apply inline-flex h-8 items-center justify-center rounded-full border border-white/75 bg-white/90 text-xs font-black text-zinc-700;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-110%);
+  }
+
+  45% {
+    transform: translateX(115%);
+  }
+
+  100% {
+    transform: translateX(115%);
+  }
+}

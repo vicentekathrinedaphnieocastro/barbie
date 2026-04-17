@@ -1,0 +1,35 @@
+{
+  "name": "Barbie Core Portfolio",
+  "short_name": "BarbieCore",
+  "description": "A Barbie Core Y2K single-page portfolio built with React, Tailwind CSS, Framer Motion, and Lucide.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF8FF",
+  "theme_color": "#FF69B4",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
