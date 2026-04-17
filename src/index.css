@@ -10,6 +10,7 @@
   --pink-soft: #ffc1e3;
   --pink-mist: #ffe3f4;
   --glitter-white: #fff8ff;
+  --bg-image: url('/bg-1280.webp');
 }
 
 @layer base {
@@ -36,12 +37,10 @@
         rgba(255, 227, 244, 0.48) 34%,
         rgba(255, 197, 228, 0.42) 68%,
         rgba(255, 233, 246, 0.5) 100%
-      ),
-      url('/bg.png');
+      );
     background-position: center;
-    background-size: auto, auto, auto, cover;
+    background-size: auto;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -53,18 +52,56 @@
   }
 }
 
+@media (min-width: 1200px) {
+  :root {
+    --bg-image: url('/bg-1920.webp');
+  }
+}
+
+.site-bg {
+  background-image: var(--bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.8;
+}
+
+.site-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(58, 30, 50, 0.5) 0%,
+      rgba(58, 30, 50, 0.36) 45%,
+      rgba(58, 30, 50, 0.44) 100%
+    );
+  pointer-events: none;
+}
+
 .pink-haze {
   background:
-    radial-gradient(circle at 8% 25%, rgba(255, 105, 180, 0.12), transparent 36%),
-    radial-gradient(circle at 88% 20%, rgba(224, 33, 138, 0.14), transparent 38%),
-    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.38), transparent 45%);
+    radial-gradient(circle at 8% 25%, rgba(255, 105, 180, 0.05), transparent 36%),
+    radial-gradient(circle at 88% 20%, rgba(224, 33, 138, 0.07), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.12), transparent 45%);
+  opacity: 0.62;
 }
 
 .sparkle-emoji {
   position: absolute;
   font-size: clamp(0.8rem, 1.8vw, 1.1rem);
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+  text-shadow: 0 0 9px rgba(255, 255, 255, 0.42);
   user-select: none;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+@supports (content-visibility: auto) {
+  .deferred-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 760px;
+  }
 }
 
 @layer components {
@@ -80,7 +117,7 @@
   }
 
   .glass-panel {
-    @apply rounded-[2.4rem] border border-white/60 bg-white/35 shadow-glow backdrop-blur-xl;
+    @apply rounded-[2.4rem] border border-white/80 bg-white/60 shadow-glow backdrop-blur-lg;
   }
 
   .doll-box {
@@ -114,7 +151,8 @@
     pointer-events: none;
     background: linear-gradient(100deg, transparent 10%, rgba(255, 255, 255, 0.42) 50%, transparent 92%);
     transform: translateX(-110%);
-    animation: shimmer 5.8s ease-in-out infinite;
+    animation: shimmer 1.6s ease-out 0.35s 1 both;
+    will-change: transform;
     z-index: 1;
   }
 
@@ -139,7 +177,7 @@
   }
 
   .glass-button {
-    @apply border border-white/70 bg-white/60 text-hotPink backdrop-blur-sm;
+    @apply border border-white/70 bg-white/70 text-hotPink;
   }
 
   .glass-button:hover {
@@ -152,7 +190,7 @@
   }
 
   .floating-pill {
-    @apply absolute -bottom-4 left-2 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/85 px-4 py-2 text-xs font-bold text-hotPink shadow-lg backdrop-blur;
+    @apply absolute -bottom-4 left-2 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4 py-2 text-xs font-bold text-hotPink shadow-lg;
   }
 
   .sticker-card {
@@ -227,6 +265,46 @@
 
   .key {
     @apply inline-flex h-8 items-center justify-center rounded-full border border-white/75 bg-white/90 text-xs font-black text-zinc-700;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-bg {
+    opacity: 0.78;
+  }
+
+  .site-bg::after {
+    background: linear-gradient(180deg, rgba(58, 30, 50, 0.42) 0%, rgba(58, 30, 50, 0.3) 100%);
+  }
+
+  .glass-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55), 0 16px 38px rgba(224, 33, 138, 0.18);
+  }
+
+  .pink-haze {
+    opacity: 0.5;
+  }
+
+  .sparkle-emoji {
+    font-size: 0.92rem;
+    text-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doll-box::after {
+    animation: none;
+    transform: translateX(0);
+  }
+
+  .sticker-card,
+  .social-dot,
+  .pink-button,
+  .glass-button {
+    transition: none;
   }
 }
 

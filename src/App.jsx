@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
   AtSign,
   Camera,
@@ -105,32 +106,86 @@ const transition = {
 }
 
 function App() {
+  const prefersReducedMotion = useReducedMotion()
+  const [isSmallViewport, setIsSmallViewport] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)')
+    const updateViewport = () => setIsSmallViewport(mediaQuery.matches)
+
+    updateViewport()
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', updateViewport)
+      return () => mediaQuery.removeEventListener('change', updateViewport)
+    }
+
+    mediaQuery.addListener(updateViewport)
+    return () => mediaQuery.removeListener(updateViewport)
+  }, [])
+
+  useEffect(() => {
+    let scrollTimeoutId
+
+    const handleScroll = () => {
+      setIsScrolling(true)
+      window.clearTimeout(scrollTimeoutId)
+      scrollTimeoutId = window.setTimeout(() => {
+        setIsScrolling(false)
+      }, 140)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.clearTimeout(scrollTimeoutId)
+    }
+  }, [])
+
+  const shouldAnimateSparkles = !prefersReducedMotion && !isSmallViewport
+  const shouldRunSparkleAnimation = shouldAnimateSparkles && !isScrolling
+  const visibleSparkles = shouldAnimateSparkles ? sparkles.slice(0, 5) : sparkles.slice(0, 2)
+
   return (
     <div className="relative min-h-screen overflow-x-clip pb-6 text-zinc-800">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+        <div className="site-bg absolute inset-0" />
         <div className="pink-haze absolute inset-0" />
-        {sparkles.map((sparkle, index) => (
-          <motion.span
-            key={sparkle.id}
-            className="sparkle-emoji"
-            style={{ top: sparkle.top, left: sparkle.left }}
-            animate={{ y: [0, -9, 0], opacity: [0.25, 0.75, 0.25] }}
-            transition={{
-              duration: 3.2,
-              ease: 'easeInOut',
-              repeat: Infinity,
-              delay: index * 0.28,
-            }}
-          >
-            {sparkle.symbol}
-          </motion.span>
-        ))}
+        {visibleSparkles.map((sparkle, index) =>
+          shouldRunSparkleAnimation ? (
+            <motion.span
+              key={sparkle.id}
+              className="sparkle-emoji"
+              style={{ top: sparkle.top, left: sparkle.left }}
+              animate={{ y: [0, -5, 0], opacity: [0.24, 0.5, 0.24] }}
+              transition={{
+                duration: 8.6,
+                ease: 'easeInOut',
+                repeat: Infinity,
+                repeatDelay: 1.1,
+                delay: index * 0.62,
+              }}
+            >
+              {sparkle.symbol}
+            </motion.span>
+          ) : (
+            <span
+              key={sparkle.id}
+              className="sparkle-emoji"
+              style={{ top: sparkle.top, left: sparkle.left, opacity: 0.35 }}
+            >
+              {sparkle.symbol}
+            </span>
+          ),
+        )}
       </div>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pt-14">
+      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pt-14">
         <motion.section
-          initial="hidden"
-          animate="show"
+          initial={prefersReducedMotion ? false : 'hidden'}
+          animate={prefersReducedMotion ? undefined : 'show'}
           variants={riseUp}
           transition={transition}
           className="glass-panel doll-box p-6 sm:p-8 lg:p-10"
@@ -141,7 +196,7 @@ function App() {
               <h1 className="title-script mt-5 text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
                 Kathrine Daphnie Vicente
               </h1>
-              <p className="mt-5 max-w-2xl text-base font-medium text-zinc-700/90 sm:text-lg">
+              <p className="mt-5 max-w-2xl text-base font-medium text-zinc-800/95 sm:text-lg">
                 I’m Kathrine, a Cisco-certified creative. I spend my days optimizing routes and my nights designing dreams. Let’s make your digital Dream House a reality!
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -156,39 +211,45 @@ function App() {
 
             <div className="relative mx-auto w-full max-w-sm">
               <div className="profile-frame">
-                <img
-                  src="/profile.png"
-                  alt="Kathrine Daphne Vicente profile photo"
-                  className="h-full w-full object-cover object-center"
-                  loading="eager"
-                  decoding="async"
-                />
+                <picture>
+                  <source
+                    type="image/webp"
+                    srcSet="/profile-640.webp 640w, /profile-960.webp 960w"
+                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 304px"
+                  />
+                  <img
+                    src="/profile.png"
+                    alt="Kathrine Daphne Vicente profile photo"
+                    className="h-full w-full object-cover object-center"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    width="640"
+                    height="640"
+                  />
+                </picture>
               </div>
-              <motion.div
-                animate={{ y: [0, -7, 0] }}
-                transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
-                className="floating-pill"
-              >
+              <div className="floating-pill">
                 <Sparkles size={16} />
                 Let’s create together
-              </motion.div>
+              </div>
             </div>
           </div>
         </motion.section>
 
         <motion.section
           id="skills"
-          initial="hidden"
-          whileInView="show"
+          initial={prefersReducedMotion ? false : 'hidden'}
+          whileInView={prefersReducedMotion ? undefined : 'show'}
           viewport={{ once: true, amount: 0.3 }}
           variants={stagger}
-          className="glass-panel p-6 sm:p-8"
+          className="glass-panel deferred-section p-6 sm:p-8"
         >
           <motion.div variants={riseUp} transition={transition} className="flex items-center gap-3">
             <WandSparkles className="text-hotPink" size={24} />
             <h2 className="section-title text-4xl sm:text-5xl">Accessories</h2>
           </motion.div>
-          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-700/85">
+          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-800/90">
             Every skill is a sticker in my digital doll box.
           </motion.p>
 
@@ -206,7 +267,7 @@ function App() {
                     <Icon size={17} />
                   </span>
                   <h3 className="mt-4 text-lg font-extrabold text-zinc-900">{skill.label}</h3>
-                  <p className="mt-2 text-sm font-medium text-zinc-700/85">{skill.details}</p>
+                  <p className="mt-2 text-sm font-medium text-zinc-800/90">{skill.details}</p>
                 </motion.article>
               )
             })}
@@ -215,17 +276,17 @@ function App() {
 
         <motion.section
           id="projects"
-          initial="hidden"
-          whileInView="show"
+          initial={prefersReducedMotion ? false : 'hidden'}
+          whileInView={prefersReducedMotion ? undefined : 'show'}
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="glass-panel p-6 sm:p-8"
+          className="glass-panel deferred-section p-6 sm:p-8"
         >
           <motion.div variants={riseUp} transition={transition} className="flex items-center gap-3">
             <Rocket className="text-hotPink" size={24} />
             <h2 className="section-title text-4xl sm:text-5xl">Projects</h2>
           </motion.div>
-          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-700/85">
+          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-800/90">
             Built like vintage packaging: iconic outside, powerful inside.
           </motion.p>
 
@@ -239,10 +300,10 @@ function App() {
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="toy-label">NEW DROP</span>
-                  <span className="text-sm font-semibold text-zinc-700/85">{project.type}</span>
+                  <span className="text-sm font-semibold text-zinc-800/90">{project.type}</span>
                 </div>
                 <h3 className="mt-5 text-xl font-black leading-tight text-zinc-900">{project.title}</h3>
-                <p className="mt-3 text-sm font-medium text-zinc-700/85">{project.description}</p>
+                <p className="mt-3 text-sm font-medium text-zinc-800/90">{project.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {project.stack.map((item) => (
                     <span key={item} className="pill-chip">
@@ -264,18 +325,18 @@ function App() {
 
         <motion.section
           id="contact"
-          initial="hidden"
-          whileInView="show"
+          initial={prefersReducedMotion ? false : 'hidden'}
+          whileInView={prefersReducedMotion ? undefined : 'show'}
           viewport={{ once: true, amount: 0.3 }}
           variants={riseUp}
           transition={transition}
-          className="glass-panel p-6 sm:p-8"
+          className="glass-panel deferred-section p-6 sm:p-8"
         >
           <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.05fr]">
             <div>
               <span className="pill-tag">RETRO LINE</span>
               <h2 className="section-title mt-4 text-4xl sm:text-5xl">Call Me</h2>
-              <p className="mt-4 max-w-lg text-base font-medium text-zinc-700/85">
+              <p className="mt-4 max-w-lg text-base font-medium text-zinc-800/90">
                 Want your brand to stand out like a collectible on the top shelf? Let us build
                 something unapologetically memorable.
               </p>
