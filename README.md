@@ -1,6 +1,6 @@
-# Barbie Project
+# Kathrine Daphnie Vicente Portfolio
 
-Simple setup guide for this React + Vite app.
+Simple setup guide for this React + Vite portfolio app.
 
 ## 1) Requirements
 
@@ -24,9 +24,11 @@ Then open the local URL shown in your terminal (usually `http://localhost:5173`)
 ## Useful commands
 
 - `npm run dev`: start the development server
-- `npm run build`: create a production build in `dist/`
-- `npm run preview`: preview the production build locally
 - `npm run lint`: run ESLint
+- `npm run typecheck`: run TypeScript checks
+- `npm run build`: run TypeScript checks and create a production build in `dist/`
+- `npm run check`: run lint and production build checks
+- `npm run preview`: preview the production build locally
 
 ## Build for production
 

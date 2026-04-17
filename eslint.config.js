@@ -5,8 +5,22 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
+const sharedGlobals = {
+  ...globals.browser,
+  ...globals.node,
+}
+
 export default defineConfig([
   globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: sharedGlobals,
+    },
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -16,8 +30,8 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      ecmaVersion: 'latest',
+      globals: sharedGlobals,
     },
   },
 ])
