@@ -142,11 +142,11 @@ function App() {
                 Kathrine Daphnie Vicente
               </h1>
               <p className="mt-5 max-w-2xl text-base font-medium text-zinc-700/90 sm:text-lg">
-                Self introduction diko alam ilalagay
+                I’m Kathrine, a Cisco-certified creative. I spend my days optimizing routes and my nights designing dreams. Let’s make your digital Dream House a reality!
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#projects" className="pink-button">
-                  Shop My Projects
+                  Check Out My Projects
                 </a>
                 <a href="#contact" className="glass-button">
                   Call Me
@@ -170,7 +170,7 @@ function App() {
                 className="floating-pill"
               >
                 <Sparkles size={16} />
-                Available for collabs
+                Let’s create together
               </motion.div>
             </div>
           </div>
