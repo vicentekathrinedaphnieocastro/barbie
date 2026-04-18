@@ -1,428 +1,326 @@
-import { useEffect, useState, type ComponentType } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { type ReactNode } from 'react'
+import { motion, useReducedMotion, type Transition, type Variants } from 'framer-motion'
+import { Rocket, Sparkles, WandSparkles } from 'lucide-react'
 import {
-  AtSign,
-  Camera,
-  Code2,
-  Globe2,
-  Mail,
-  Palette,
-  PhoneCall,
-  Rocket,
-  Sparkles,
-  TabletSmartphone,
-  WandSparkles,
-} from 'lucide-react'
+  contactItems,
+  availability,
+  projects,
+  skills,
+  sparkles,
+  type ContactItem,
+  type IconComponent,
+  type Project,
+  type Skill,
+} from './portfolioData'
 
-type Skill = {
-  label: string
-  details: string
-  icon: ComponentType<{ size?: number; className?: string }>
-}
-
-type Project = {
-  title: string
-  type: string
-  description: string
-  stack: string[]
-  status: string
-}
-
-type ContactItem = {
-  label: string
-  value: string
-  icon: ComponentType<{ size?: number; className?: string }>
-}
-
-type Sparkle = {
-  id: number
-  symbol: string
-  top: string
-  left: string
-}
-
-const skills: Skill[] = [
-  {
-    label: 'React Magic',
-    details: 'Component-first interfaces with playful interactions.',
-    icon: WandSparkles,
-  },
-  {
-    label: 'Tailwind Styling',
-    details: 'Fast, consistent UI systems with custom design tokens.',
-    icon: Palette,
-  },
-  {
-    label: 'Motion Design',
-    details: 'Framer Motion storytelling, reveals, and polished transitions.',
-    icon: Sparkles,
-  },
-  {
-    label: 'Frontend Engineering',
-    details: 'Clean React architecture focused on performance and scale.',
-    icon: Code2,
-  },
-  {
-    label: 'Responsive UX',
-    details: 'Layouts crafted to feel premium on mobile and desktop.',
-    icon: TabletSmartphone,
-  },
-  {
-    label: 'Visual Direction',
-    details: 'Brand styling, look-and-feel systems, and editorial UI polish.',
-    icon: Camera,
-  },
-]
-
-const projects: Project[] = [
-  {
-    title: 'Dream Closet Builder',
-    type: 'Style Planner App',
-    description:
-      'A drag-and-drop outfit planner with saved looks, trend tags, and calendar syncing.',
-    stack: ['React', 'Tailwind', 'Framer Motion'],
-    status: 'Case study in progress',
-  },
-  {
-    title: 'Glam Drop Landing',
-    type: 'Product Launch Site',
-    description:
-      'A high-energy launch page with countdowns, animated lookbooks, and conversion-focused flow.',
-    stack: ['Vite', 'React', 'A/B Testing'],
-    status: 'Case study in progress',
-  },
-  {
-    title: 'Cherry Arcade UI Kit',
-    type: 'Design System',
-    description:
-      'A playful component library mixing retro game textures with modern accessibility standards.',
-    stack: ['Tokens', 'Storybook', 'WCAG'],
-    status: 'Case study in progress',
-  },
-]
-
-const contactItems: ContactItem[] = [
-  {
-    label: 'Email',
-    value: 'Available on request',
-    icon: Mail,
-  },
-  {
-    label: 'Phone',
-    value: 'Available on request',
-    icon: PhoneCall,
-  },
-  {
-    label: 'Portfolio links',
-    value: 'Coming soon',
-    icon: Globe2,
-  },
-  {
-    label: 'Social',
-    value: 'Coming soon',
-    icon: AtSign,
-  },
-]
-
-const sparkles: Sparkle[] = [
-  { id: 1, symbol: '✨', top: '5%', left: '8%' },
-  { id: 2, symbol: '⭐', top: '14%', left: '82%' },
-  { id: 3, symbol: '✨', top: '33%', left: '4%' },
-  { id: 4, symbol: '⭐', top: '38%', left: '90%' },
-  { id: 5, symbol: '✨', top: '56%', left: '14%' },
-  { id: 6, symbol: '⭐', top: '64%', left: '78%' },
-  { id: 7, symbol: '✨', top: '82%', left: '9%' },
-  { id: 8, symbol: '⭐', top: '88%', left: '88%' },
-]
-
-const riseUp = {
-  hidden: { opacity: 0, y: 26 },
+const revealVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
 }
 
-const stagger = {
+const staggerVariants: Variants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.12,
+      delayChildren: 0.04,
+      staggerChildren: 0.08,
     },
   },
 }
 
-const transition = {
-  duration: 0.65,
+const revealTransition: Transition = {
+  duration: 0.52,
   ease: [0.22, 1, 0.36, 1],
-} as const
+}
 
-function App() {
+type SectionProps = {
+  id: string
+  title: string
+  summary: string
+  icon: IconComponent
+  children: ReactNode
+}
+
+function BackgroundLayer() {
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+      <div className="site-bg absolute inset-0" />
+      <div className="pink-haze absolute inset-0" />
+      {sparkles.map((sparkle, index) => (
+        <span
+          key={sparkle.id}
+          className="sparkle-emoji"
+          style={{
+            top: sparkle.top,
+            left: sparkle.left,
+            animationDelay: `${index * 0.7}s`,
+          }}
+        >
+          {sparkle.symbol}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function SectionHeader({ icon: Icon, title, summary }: Omit<SectionProps, 'id' | 'children'>) {
+  return (
+    <>
+      <motion.div variants={revealVariants} transition={revealTransition} className="flex items-center gap-3">
+        <Icon className="text-hotPink" size={24} />
+        <h2 className="section-title text-4xl sm:text-5xl">{title}</h2>
+      </motion.div>
+      <motion.p variants={revealVariants} transition={revealTransition} className="mt-3 max-w-2xl text-base font-medium text-zinc-800/90">
+        {summary}
+      </motion.p>
+    </>
+  )
+}
+
+function PortfolioSection({ id, title, summary, icon, children }: SectionProps) {
   const prefersReducedMotion = useReducedMotion()
-  const [isSmallViewport, setIsSmallViewport] = useState(false)
-  const [isScrolling, setIsScrolling] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)')
-    const updateViewport = () => setIsSmallViewport(mediaQuery.matches)
-
-    updateViewport()
-
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', updateViewport)
-      return () => mediaQuery.removeEventListener('change', updateViewport)
-    }
-
-    mediaQuery.addListener(updateViewport)
-    return () => mediaQuery.removeListener(updateViewport)
-  }, [])
-
-  useEffect(() => {
-    let scrollTimeoutId: number | undefined
-
-    const handleScroll = () => {
-      setIsScrolling(true)
-
-      if (scrollTimeoutId !== undefined) {
-        window.clearTimeout(scrollTimeoutId)
-      }
-
-      scrollTimeoutId = window.setTimeout(() => {
-        setIsScrolling(false)
-      }, 140)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-
-      if (scrollTimeoutId !== undefined) {
-        window.clearTimeout(scrollTimeoutId)
-      }
-    }
-  }, [])
-
-  const shouldAnimateSparkles = !prefersReducedMotion && !isSmallViewport
-  const shouldRunSparkleAnimation = shouldAnimateSparkles && !isScrolling
-  const visibleSparkles = shouldAnimateSparkles ? sparkles.slice(0, 5) : sparkles.slice(0, 2)
 
   return (
-    <div className="relative min-h-screen overflow-x-clip pb-6 text-zinc-800">
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-        <div className="site-bg absolute inset-0" />
-        <div className="pink-haze absolute inset-0" />
-        {visibleSparkles.map((sparkle, index) =>
-          shouldRunSparkleAnimation ? (
-            <motion.span
-              key={sparkle.id}
-              className="sparkle-emoji"
-              style={{ top: sparkle.top, left: sparkle.left }}
-              animate={{ y: [0, -5, 0], opacity: [0.24, 0.5, 0.24] }}
-              transition={{
-                duration: 8.6,
-                ease: 'easeInOut',
-                repeat: Infinity,
-                repeatDelay: 1.1,
-                delay: index * 0.62,
-              }}
-            >
-              {sparkle.symbol}
-            </motion.span>
-          ) : (
-            <span
-              key={sparkle.id}
-              className="sparkle-emoji"
-              style={{ top: sparkle.top, left: sparkle.left, opacity: 0.35 }}
-            >
-              {sparkle.symbol}
+    <motion.section
+      id={id}
+      initial={prefersReducedMotion ? false : 'hidden'}
+      whileInView={prefersReducedMotion ? undefined : 'show'}
+      viewport={{ once: true, amount: 0.24 }}
+      variants={staggerVariants}
+      className="glass-panel deferred-section p-6 sm:p-8"
+    >
+      <SectionHeader icon={icon} title={title} summary={summary} />
+      {children}
+    </motion.section>
+  )
+}
+
+function HeroSection() {
+  const prefersReducedMotion = useReducedMotion()
+
+  return (
+    <motion.section
+      initial={prefersReducedMotion ? false : 'hidden'}
+      animate={prefersReducedMotion ? undefined : 'show'}
+      variants={revealVariants}
+      transition={revealTransition}
+      className="glass-panel doll-box p-6 sm:p-8 lg:p-10"
+    >
+      <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <div>
+          <span className="pill-tag">PERSONAL PORTFOLIO</span>
+          <h1 className="title-script mt-5 text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
+            Kathrine Daphnie Vicente
+          </h1>
+          <p className="mt-5 max-w-2xl text-base font-medium text-zinc-800/95 sm:text-lg">
+            I’m Kathrine, a Cisco-certified creative. I spend my days optimizing routes and my nights designing dreams. Let’s make your digital Dream House a reality!
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a href="#projects" className="pink-button">
+              Check Out My Projects
+            </a>
+            <a href="#skills" className="glass-button">
+              Skills
+            </a>
+            <a href="#contact" className="glass-button">
+              Contact Me
+            </a>
+          </div>
+        </div>
+
+        <div className="relative mx-auto w-full max-w-sm">
+          <div className="profile-frame">
+            <picture>
+              <source
+                type="image/webp"
+                srcSet="/profile-640.webp 640w, /profile-960.webp 960w"
+                sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 304px"
+              />
+              <img
+                src="/profile-960.webp"
+                alt="Kathrine Daphnie Vicente profile photo"
+                className="h-full w-full object-cover object-center"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                width="640"
+                height="640"
+              />
+            </picture>
+          </div>
+          <div className="floating-pill">
+            <Sparkles size={16} />
+            Let’s create together
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
+function SkillCard({ skill }: { skill: Skill }) {
+  const Icon = skill.icon
+
+  return (
+    <motion.article variants={revealVariants} transition={revealTransition} className="sticker-card">
+      <span className="icon-badge">
+        <Icon size={17} />
+      </span>
+      <h3 className="mt-4 text-lg font-extrabold text-zinc-900">{skill.label}</h3>
+      <p className="mt-2 text-sm font-medium text-zinc-800/90">{skill.details}</p>
+    </motion.article>
+  )
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <motion.article variants={revealVariants} transition={revealTransition} className="toy-card">
+      <div className="project-image-frame">
+        <img
+          src={project.image.src}
+          alt={project.image.alt}
+          className="project-image"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <div className="flex items-center justify-between gap-2">
+        <span className="toy-label">New</span>
+        <span className="text-sm font-semibold text-zinc-800/90">{project.type}</span>
+      </div>
+      <h3 className="mt-5 text-xl font-black leading-tight text-zinc-900">{project.title}</h3>
+      {project.description ? (
+        <p className="mt-3 text-sm font-medium text-zinc-800/90">{project.description}</p>
+      ) : null}
+      {project.stack.length > 0 ? (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {project.stack.map((item) => (
+            <span key={item} className="pill-chip">
+              {item}
             </span>
-          ),
-        )}
+          ))}
+        </div>
+      ) : null}
+      <span className="mt-6 inline-flex text-sm font-extrabold text-hotPink">{project.status}</span>
+    </motion.article>
+  )
+}
+
+function ContactRow({ item }: { item: ContactItem }) {
+  const Icon = item.icon
+
+  return (
+    <div className="contact-row">
+      <span className="contact-icon">
+        <Icon size={18} />
+      </span>
+      <div>
+        <span className="block text-xs font-black uppercase text-hotPink/80">{item.label}</span>
+        <p className="mt-1 text-base font-extrabold text-zinc-900">{item.value}</p>
+        <p className="mt-1 text-sm font-medium text-zinc-700/90">{item.detail}</p>
+      </div>
+    </div>
+  )
+}
+
+function ContactPanel() {
+  return (
+    <div className="contact-panel">
+      <div className="contact-panel-top">
+        <span className="pill-tag">OPEN TO PROJECTS</span>
+        <p className="mt-4 text-2xl font-black leading-tight text-zinc-950 sm:text-3xl">
+          Let’s make something polished, memorable, and easy to use.
+        </p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {availability.map((item) => (
+            <span key={item} className="availability-chip">
+              {item}
+            </span>
+          ))}
+        </div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="#projects" className="pink-button">
+            View Projects
+          </a>
+          <a href="#skills" className="glass-button">
+            See Skills
+          </a>
+        </div>
       </div>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pt-14">
-        <motion.section
-          initial={prefersReducedMotion ? false : 'hidden'}
-          animate={prefersReducedMotion ? undefined : 'show'}
-          variants={riseUp}
-          transition={transition}
-          className="glass-panel doll-box p-6 sm:p-8 lg:p-10"
-        >
-          <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <span className="pill-tag">PERSONAL PORTFOLIO</span>
-              <h1 className="title-script mt-5 text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
-                Kathrine Daphnie Vicente
-              </h1>
-              <p className="mt-5 max-w-2xl text-base font-medium text-zinc-800/95 sm:text-lg">
-                I’m Kathrine, a Cisco-certified creative. I spend my days optimizing routes and my nights designing dreams. Let’s make your digital Dream House a reality!
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a href="#projects" className="pink-button">
-                  Check Out My Projects
-                </a>
-                <a href="#contact" className="glass-button">
-                  Call Me
-                </a>
-              </div>
-            </div>
+      <div className="contact-list">
+        {contactItems.map((item) => (
+          <ContactRow key={item.label} item={item} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
-            <div className="relative mx-auto w-full max-w-sm">
-              <div className="profile-frame">
-                <picture>
-                  <source
-                    type="image/webp"
-                    srcSet="/profile-640.webp 640w, /profile-960.webp 960w"
-                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 304px"
-                  />
-                  <img
-                    src="/profile-960.webp"
-                    alt="Kathrine Daphnie Vicente profile photo"
-                    className="h-full w-full object-cover object-center"
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                    width="640"
-                    height="640"
-                  />
-                </picture>
-              </div>
-              <div className="floating-pill">
-                <Sparkles size={16} />
-                Let’s create together
-              </div>
-            </div>
-          </div>
-        </motion.section>
+function App() {
+  return (
+    <div className="relative min-h-screen overflow-x-clip pb-6 text-zinc-800">
+      <BackgroundLayer />
 
-        <motion.section
+      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-12 pt-10 sm:px-6 lg:px-8 lg:pt-14">
+        <HeroSection />
+
+        <PortfolioSection
           id="skills"
-          initial={prefersReducedMotion ? false : 'hidden'}
-          whileInView={prefersReducedMotion ? undefined : 'show'}
-          viewport={{ once: true, amount: 0.3 }}
-          variants={stagger}
-          className="glass-panel deferred-section p-6 sm:p-8"
+          icon={WandSparkles}
+          title="Skills"
+          summary="Every skill is a sticker in my digital doll box."
         >
-          <motion.div variants={riseUp} transition={transition} className="flex items-center gap-3">
-            <WandSparkles className="text-hotPink" size={24} />
-            <h2 className="section-title text-4xl sm:text-5xl">Accessories</h2>
-          </motion.div>
-          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-800/90">
-            Every skill is a sticker in my digital doll box.
-          </motion.p>
-
-          <motion.div variants={stagger} className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {skills.map((skill) => {
-              const Icon = skill.icon
-
-              return (
-                <motion.article
-                  key={skill.label}
-                  variants={riseUp}
-                  transition={transition}
-                  className="sticker-card"
-                >
-                  <span className="icon-badge">
-                    <Icon size={17} />
-                  </span>
-                  <h3 className="mt-4 text-lg font-extrabold text-zinc-900">{skill.label}</h3>
-                  <p className="mt-2 text-sm font-medium text-zinc-800/90">{skill.details}</p>
-                </motion.article>
-              )
-            })}
-          </motion.div>
-        </motion.section>
-
-        <motion.section
-          id="projects"
-          initial={prefersReducedMotion ? false : 'hidden'}
-          whileInView={prefersReducedMotion ? undefined : 'show'}
-          viewport={{ once: true, amount: 0.2 }}
-          variants={stagger}
-          className="glass-panel deferred-section p-6 sm:p-8"
-        >
-          <motion.div variants={riseUp} transition={transition} className="flex items-center gap-3">
-            <Rocket className="text-hotPink" size={24} />
-            <h2 className="section-title text-4xl sm:text-5xl">Projects</h2>
-          </motion.div>
-          <motion.p variants={riseUp} transition={transition} className="mt-3 text-base font-medium text-zinc-800/90">
-            Built like vintage packaging: iconic outside, powerful inside.
-          </motion.p>
-
-          <motion.div variants={stagger} className="mt-7 grid gap-5 lg:grid-cols-3">
-            {projects.map((project) => (
-              <motion.article
-                key={project.title}
-                variants={riseUp}
-                transition={transition}
-                className="toy-card"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="toy-label">NEW DROP</span>
-                  <span className="text-sm font-semibold text-zinc-800/90">{project.type}</span>
-                </div>
-                <h3 className="mt-5 text-xl font-black leading-tight text-zinc-900">{project.title}</h3>
-                <p className="mt-3 text-sm font-medium text-zinc-800/90">{project.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.stack.map((item) => (
-                    <span key={item} className="pill-chip">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                <span className="mt-6 inline-flex text-sm font-extrabold text-hotPink">
-                  {project.status}
-                </span>
-              </motion.article>
+          <motion.div variants={staggerVariants} className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {skills.map((skill) => (
+              <SkillCard key={skill.label} skill={skill} />
             ))}
           </motion.div>
-        </motion.section>
+        </PortfolioSection>
 
-        <motion.section
-          id="contact"
-          initial={prefersReducedMotion ? false : 'hidden'}
-          whileInView={prefersReducedMotion ? undefined : 'show'}
-          viewport={{ once: true, amount: 0.3 }}
-          variants={riseUp}
-          transition={transition}
-          className="glass-panel deferred-section p-6 sm:p-8"
+        <PortfolioSection
+          id="projects"
+          icon={Rocket}
+          title="Projects"
+          summary="Built like vintage packaging: iconic outside, powerful inside."
         >
-          <div className="grid items-start gap-8 lg:grid-cols-[1fr_1.05fr]">
-            <div>
-              <span className="pill-tag">RETRO LINE</span>
-              <h2 className="section-title mt-4 text-4xl sm:text-5xl">Call Me</h2>
-              <p className="mt-4 max-w-lg text-base font-medium text-zinc-800/90">
-                Want your brand to stand out like a collectible on the top shelf? Let us build
-                something unapologetically memorable.
+          <motion.div variants={staggerVariants} className="mt-7 grid gap-5 lg:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
+          </motion.div>
+        </PortfolioSection>
+
+        <PortfolioSection
+          id="contact"
+          icon={Sparkles}
+          title="Contact Me"
+          summary="Clear next steps, no gimmicks."
+        >
+          <div className="mt-7 grid items-start gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="contact-intro-panel">
+              <span className="pill-tag">WORK WITH ME</span>
+              <p className="mt-4 max-w-lg text-base font-medium text-zinc-800/90 sm:text-lg">
+                Send the project idea, the page or feature you want improved, and the deadline you are working toward.
               </p>
-            </div>
-
-            <div className="flip-phone">
-              <div className="phone-top" />
-              <div className="phone-screen">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-hotPink/90">Speed Dial</p>
-                {contactItems.map((item) => {
-                  const Icon = item.icon
-
-                  return (
-                    <div key={item.label} className="phone-link">
-                      <Icon size={16} />
-                      <span>
-                        <span className="block text-xs font-black uppercase text-hotPink/80">{item.label}</span>
-                        {item.value}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="phone-keypad">
-                {'123456789*0#'.split('').map((key) => (
-                  <span key={key} className="key">
-                    {key}
-                  </span>
-                ))}
+              <div className="contact-placeholder-list">
+                <div>
+                  <span>Email</span>
+                  <strong>kathrine.vicente@ebarbie.com</strong>
+                </div>
+                <div>
+                  <span>Phone</span>
+                  <strong>+63 900 000 0000</strong>
+                </div>
+                <div>
+                  <span>Location</span>
+                  <strong>Philippines</strong>
+                </div>
               </div>
             </div>
+            <ContactPanel />
           </div>
-        </motion.section>
+        </PortfolioSection>
       </main>
     </div>
   )

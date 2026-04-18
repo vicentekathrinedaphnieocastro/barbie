@@ -10,6 +10,8 @@
   --pink-soft: #ffc1e3;
   --pink-mist: #ffe3f4;
   --glitter-white: #fff8ff;
+  --mint-glow: #a7f3d0;
+  --ink-soft: #2f2430;
   --bg-image: url('/bg-1280.webp');
 }
 
@@ -24,10 +26,14 @@
     @apply min-h-screen;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
-    color: #4f2142;
+    color: var(--ink-soft);
     background:
       radial-gradient(circle at 15% 18%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 38%),
       radial-gradient(circle at 82% 8%, rgba(255, 214, 236, 0.38) 0%, rgba(255, 214, 236, 0) 40%),
@@ -50,6 +56,12 @@
     color: inherit;
     text-decoration: none;
   }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid rgba(167, 243, 208, 0.95);
+    outline-offset: 3px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -63,7 +75,8 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  opacity: 0.8;
+  opacity: 0.76;
+  transform: translateZ(0);
 }
 
 .site-bg::after {
@@ -82,19 +95,21 @@
 
 .pink-haze {
   background:
-    radial-gradient(circle at 8% 25%, rgba(255, 105, 180, 0.05), transparent 36%),
-    radial-gradient(circle at 88% 20%, rgba(224, 33, 138, 0.07), transparent 38%),
-    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.12), transparent 45%);
-  opacity: 0.62;
+    radial-gradient(circle at 8% 25%, rgba(255, 105, 180, 0.06), transparent 36%),
+    radial-gradient(circle at 88% 20%, rgba(167, 243, 208, 0.08), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.14), transparent 45%);
+  opacity: 0.68;
 }
 
 .sparkle-emoji {
   position: absolute;
-  font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+  font-size: 1rem;
+  opacity: 0.34;
   text-shadow: 0 0 9px rgba(255, 255, 255, 0.42);
   user-select: none;
   transform: translateZ(0);
   will-change: transform, opacity;
+  animation: sparkle-drift 8.5s ease-in-out infinite;
 }
 
 @supports (content-visibility: auto) {
@@ -107,17 +122,16 @@
 @layer components {
   .title-script {
     @apply font-display text-hotPink;
-    text-shadow: 0 5px 14px rgba(224, 33, 138, 0.25);
+    text-shadow: 0 4px 12px rgba(224, 33, 138, 0.2);
   }
 
   .section-title {
     @apply font-display text-hotPink;
-    letter-spacing: 0.015em;
     text-shadow: 0 3px 10px rgba(224, 33, 138, 0.2);
   }
 
   .glass-panel {
-    @apply rounded-[2.4rem] border border-white/80 bg-white/60 shadow-glow backdrop-blur-lg;
+    @apply rounded-lg border border-white/75 bg-white/70 shadow-glow backdrop-blur-md;
   }
 
   .doll-box {
@@ -134,13 +148,12 @@
     position: absolute;
     top: 1.1rem;
     right: 1.1rem;
-    border-radius: 999px;
+    border-radius: 8px;
     padding: 0.35rem 0.75rem;
     background: linear-gradient(135deg, rgba(255, 105, 180, 0.96), rgba(224, 33, 138, 0.96));
     color: var(--glitter-white);
     font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
     z-index: 2;
   }
 
@@ -157,13 +170,14 @@
   }
 
   .pill-tag {
-    @apply inline-flex items-center rounded-full border border-white/70 bg-white/65 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-hotPink;
+    @apply inline-flex items-center rounded-lg border border-white/70 bg-white/65 px-4 py-2 text-xs font-extrabold uppercase text-hotPink;
     box-shadow: inset 0 0 0 1px rgba(255, 105, 180, 0.2);
   }
 
   .pink-button,
   .glass-button {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-extrabold transition-all duration-300;
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-extrabold transition-all duration-300;
+    transform: translateZ(0);
   }
 
   .pink-button {
@@ -172,8 +186,8 @@
   }
 
   .pink-button:hover {
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 19px 28px rgba(224, 33, 138, 0.36);
+    transform: translateY(-1px);
+    box-shadow: 0 16px 26px rgba(224, 33, 138, 0.34);
   }
 
   .glass-button {
@@ -182,19 +196,19 @@
 
   .glass-button:hover {
     @apply border-hotPink/30 bg-white/80;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
   .profile-frame {
-    @apply relative mx-auto aspect-square w-full max-w-[19rem] overflow-hidden rounded-[2.2rem] border-4 border-white/70 bg-gradient-to-br from-bubblegum to-blush shadow-[0_20px_55px_rgba(224,33,138,0.3)];
+    @apply relative mx-auto aspect-square w-full max-w-[19rem] overflow-hidden rounded-lg border-4 border-white/70 bg-gradient-to-br from-bubblegum to-blush shadow-[0_18px_44px_rgba(224,33,138,0.24)];
   }
 
   .floating-pill {
-    @apply absolute -bottom-4 left-2 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-4 py-2 text-xs font-bold text-hotPink shadow-lg;
+    @apply absolute -bottom-4 left-2 inline-flex items-center gap-2 rounded-lg border border-white/70 bg-white/90 px-4 py-2 text-xs font-bold text-hotPink shadow-lg;
   }
 
   .sticker-card {
-    @apply rounded-[1.8rem] border border-white/70 bg-white/75 p-5;
+    @apply rounded-lg border border-white/70 bg-white/75 p-5;
     box-shadow:
       0 10px 28px rgba(224, 33, 138, 0.13),
       inset 0 0 0 1px rgba(255, 255, 255, 0.85);
@@ -209,62 +223,86 @@
   }
 
   .icon-badge {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-gradient-to-br from-barbiePink to-hotPink text-white;
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/70 bg-gradient-to-br from-barbiePink to-hotPink text-white;
     box-shadow: 0 8px 15px rgba(224, 33, 138, 0.3);
   }
 
   .toy-card {
-    @apply flex h-full flex-col rounded-[1.8rem] border-2 border-white/80 bg-gradient-to-b from-white/90 to-pink-50/75 p-5;
+    @apply flex h-full flex-col rounded-lg border-2 border-white/80 bg-gradient-to-b from-white/90 to-pink-50/75 p-5;
     box-shadow: 0 14px 33px rgba(224, 33, 138, 0.14);
   }
 
+  .project-image-frame {
+    @apply mb-5 aspect-[16/10] overflow-hidden rounded-lg border border-white/80 bg-white/80;
+    box-shadow: inset 0 0 0 1px rgba(224, 33, 138, 0.08);
+  }
+
+  .project-image {
+    @apply h-full w-full object-cover;
+    transition: transform 260ms ease;
+  }
+
+  .toy-card:hover .project-image {
+    transform: scale(1.03);
+  }
+
   .toy-label {
-    @apply inline-flex items-center rounded-full bg-hotPink px-3 py-1 text-[11px] font-black uppercase tracking-[0.12em] text-white;
+    @apply inline-flex items-center rounded-lg bg-hotPink px-3 py-1 text-[11px] font-black uppercase text-white;
   }
 
   .pill-chip {
-    @apply inline-flex rounded-full border border-hotPink/20 bg-white/90 px-3 py-1 text-xs font-bold text-hotPink;
+    @apply inline-flex rounded-lg border border-hotPink/20 bg-white/90 px-3 py-1 text-xs font-bold text-hotPink;
   }
 
-  .flip-phone {
-    @apply rounded-[2rem] border-2 border-white/75 bg-white/70 p-4;
+  .contact-panel {
+    @apply overflow-hidden rounded-lg border border-white/75 bg-white/75;
     box-shadow:
-      0 16px 36px rgba(224, 33, 138, 0.18),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.85);
+      0 18px 42px rgba(224, 33, 138, 0.16),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.75);
   }
 
-  .phone-top {
-    @apply mx-auto mb-3 h-1.5 w-20 rounded-full bg-hotPink/35;
+  .contact-intro-panel {
+    @apply self-start rounded-lg border border-white/75 bg-white/65 p-5 pb-4 sm:pb-4;
+    box-shadow:
+      0 14px 32px rgba(224, 33, 138, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.72);
   }
 
-  .phone-screen {
-    @apply rounded-[1.4rem] border border-white/70 bg-gradient-to-b from-white/95 to-pink-100/80 p-4;
+  .contact-placeholder-list {
+    @apply mt-5 grid gap-2;
   }
 
-  .phone-link {
-    @apply mt-3 flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-2 text-sm font-semibold text-zinc-800 transition-colors;
+  .contact-placeholder-list div {
+    @apply grid gap-1 rounded-lg border border-hotPink/15 bg-white/75 px-3 py-2;
   }
 
-  .phone-link:hover {
-    @apply border-hotPink/35 text-hotPink;
+  .contact-placeholder-list span {
+    @apply text-xs font-black uppercase text-hotPink/80;
   }
 
-  .social-dot {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/75 bg-white text-hotPink;
-    transition: transform 220ms ease, box-shadow 220ms ease;
+  .contact-placeholder-list strong {
+    @apply text-sm font-extrabold text-zinc-900;
   }
 
-  .social-dot:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 18px rgba(224, 33, 138, 0.25);
+  .contact-panel-top {
+    @apply border-b border-hotPink/10 bg-gradient-to-br from-white/95 via-pink-50/80 to-emerald-50/75 p-5 sm:p-6;
   }
 
-  .phone-keypad {
-    @apply mt-4 grid grid-cols-3 gap-2;
+  .availability-chip {
+    @apply inline-flex rounded-lg border border-hotPink/20 bg-white/85 px-3 py-1 text-xs font-extrabold text-hotPink;
   }
 
-  .key {
-    @apply inline-flex h-8 items-center justify-center rounded-full border border-white/75 bg-white/90 text-xs font-black text-zinc-700;
+  .contact-list {
+    @apply grid gap-3 p-4 sm:p-5;
+  }
+
+  .contact-row {
+    @apply grid grid-cols-[2.75rem_1fr] gap-3 rounded-lg border border-white/75 bg-white/85 p-4;
+    box-shadow: 0 10px 22px rgba(224, 33, 138, 0.08);
+  }
+
+  .contact-icon {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-lg border border-hotPink/15 bg-pink-50 text-hotPink;
   }
 }
 
@@ -289,22 +327,46 @@
   }
 
   .sparkle-emoji {
-    font-size: 0.92rem;
     text-shadow: none;
+  }
+
+  .sparkle-emoji:nth-of-type(n + 3) {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .sparkle-emoji {
+    animation: none;
+  }
+
   .doll-box::after {
     animation: none;
     transform: translateX(0);
   }
 
   .sticker-card,
-  .social-dot,
+  .project-image,
   .pink-button,
   .glass-button {
     transition: none;
+  }
+}
+
+@keyframes sparkle-drift {
+  0%,
+  100% {
+    opacity: 0.24;
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    opacity: 0.48;
+    transform: translate3d(0, -5px, 0);
   }
 }
 
