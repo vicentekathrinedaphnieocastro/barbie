@@ -13,6 +13,8 @@ import {
   type Skill,
 } from './portfolioData'
 
+const publicPath = (filename: string) => `${import.meta.env.BASE_URL}${filename}`
+
 const revealVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
@@ -44,7 +46,17 @@ type SectionProps = {
 function BackgroundLayer() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-      <div className="site-bg absolute inset-0" />
+      <picture>
+        <source media="(min-width: 1200px)" srcSet={publicPath('bg-1920.webp')} />
+        <img
+          src={publicPath('bg-1280.webp')}
+          alt=""
+          className="site-bg absolute inset-0"
+          loading="eager"
+          decoding="async"
+        />
+      </picture>
+      <div className="site-bg-shade absolute inset-0" />
       <div className="pink-haze absolute inset-0" />
       {sparkles.map((sparkle, index) => (
         <span
@@ -133,11 +145,11 @@ function HeroSection() {
             <picture>
               <source
                 type="image/webp"
-                srcSet="/profile-640.webp 640w, /profile-960.webp 960w"
+                srcSet={`${publicPath('profile-640.webp')} 640w, ${publicPath('profile-960.webp')} 960w`}
                 sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 304px"
               />
               <img
-                src="/profile-960.webp"
+                src={publicPath('profile-960.webp')}
                 alt="Kathrine Daphnie Vicente profile photo"
                 className="h-full w-full object-cover object-center"
                 loading="eager"

@@ -46,6 +46,8 @@ export type Sparkle = {
   left: string
 }
 
+const publicPath = (filename: string) => `${import.meta.env.BASE_URL}${filename}`
+
 export const skills: Skill[] = [
   {
     label: 'Cisco Networking',
@@ -88,7 +90,7 @@ export const projects: Project[] = [
     stack: [],
     status: 'Case study in progress',
     image: {
-      src: '/junji.jpg',
+      src: publicPath('junji.jpg'),
       alt: 'Junji Ito Art Gallery project preview',
     },
   },
@@ -100,7 +102,7 @@ export const projects: Project[] = [
     stack: [],
     status: 'Case study in progress',
     image: {
-      src: '/trashure.jpg',
+      src: publicPath('trashure.jpg'),
       alt: 'Trashure project preview',
     },
   },
@@ -112,7 +114,7 @@ export const projects: Project[] = [
     stack: [],
     status: 'Case study in progress',
     image: {
-      src: '/kyusi.jpg',
+      src: publicPath('kyusi.jpg'),
       alt: 'Kyusi Esports project preview',
     },
   },

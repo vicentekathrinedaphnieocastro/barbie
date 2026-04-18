@@ -30,6 +30,17 @@ Then open the local URL shown in your terminal (usually `http://localhost:5173`)
 - `npm run check`: run lint and production build checks
 - `npm run preview`: preview the production build locally
 
+## GitHub Pages
+
+This project is configured for a GitHub Pages project site at:
+
+```text
+https://bitterbuggg.github.io/barbie/
+```
+
+In GitHub, open the repository settings and set Pages → Build and deployment → Source to `GitHub Actions`.
+The workflow in `.github/workflows/deploy.yml` builds the Vite app and deploys the `dist/` output.
+
 ## Build for production
 
 ```bash
