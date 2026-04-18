@@ -88,7 +88,7 @@ export const projects: Project[] = [
     description:
       '',
     stack: [],
-    status: 'Case study in progress',
+    status: 'Project Preview',
     image: {
       src: publicPath('junji.jpg'),
       alt: 'Junji Ito Art Gallery project preview',
@@ -100,7 +100,7 @@ export const projects: Project[] = [
     description:
       '',
     stack: [],
-    status: 'Case study in progress',
+    status: 'Project Preview',
     image: {
       src: publicPath('trashure.jpg'),
       alt: 'Trashure project preview',
@@ -112,7 +112,7 @@ export const projects: Project[] = [
     description:
       '',
     stack: [],
-    status: 'Case study in progress',
+    status: 'Project Preview',
     image: {
       src: publicPath('kyusi.jpg'),
       alt: 'Kyusi Esports project preview',
